@@ -79,12 +79,56 @@ model Card {
 
 model User {
   id       Int    @id @default(autoincrement())
-  name     String
   email    String @unique
   password String
+  name     String
+  userType String
+  profileImage  String?
+  bio      String?
+
+  restaurants Restaurant[]
+  orders Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model Restaurant {
+  id  Int    @id @default(autoincrement())
+  name String
+  category String
+  deliveryFee Decimal
+  logo String?
+  openingHours String
+
+   orders Order[]
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("restaurants")
+}
+
+model Order {
+  id  Int    @id @default(autoincrement())
+  status String
+  totalAmount Decimal
+  notes String?
+  paymentMethod String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  restaurantId Int
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("orders")
 }
