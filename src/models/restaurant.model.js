@@ -2,19 +2,44 @@ import prisma from "../../prisma/prisma.js";
 
 class RestaurantModel {
   // Obter todas os restaurantes
-  async findAll() {
-    const restaurantes = await prisma.restaurant.findMany({
+ async findAll(name, category, pagina, limite) {
+    if (Number(pagina) < 1) {
+      pagina = 1;
+    }
+
+    if (Number(limite) < 1 || Number(limite) > 100) {
+      limite = 10;
+    }
+    
+    const skip = (Number(pagina) - 1) * Number(limite);
+
+    const where = {}
+
+    if(name) {
+      where.name = name
+    }
+
+    if(category) {
+      where.category = {
+        gte: String(category),
+      }
+    }
+
+  const restaurants = await prisma.restaurant.findMany({
+      skip,
+      take: Number(limite),
+      where,
       orderBy: {
         createdAt: "desc",
       },
-      include: {
-        users: true,
-      },
     });
 
-    // console.log(restaurantes);
+    const totalExibidos = restaurants.length;
+    const totalGeral = await prisma.restaurant.count({ 
+      where,
+     });
 
-    return restaurantes;
+    return { totalExibidos, totalGeral, restaurants};
   }
 
   // Criar um novo restaurante
