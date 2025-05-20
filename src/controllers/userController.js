@@ -1,4 +1,4 @@
-import UserModel from "../models/usermModel.js";
+import UserModel from "../models/user.model.js";
 
 class UserController {
   // GET /api/users
