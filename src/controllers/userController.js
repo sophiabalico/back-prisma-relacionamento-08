@@ -3,8 +3,13 @@ import UserModel from "../models/user.model.js";
 class UserController {
   // GET /api/users
   async getAllUsers(req, res) {
+    const name = req.query.name;
+    const userType = req.query.userType;
+    const pagina = req.query.pagina || 1; 
+    const limite = req.query.limite || 10;
+
     try {
-      const users = await UserModel.findAll();
+      const users = await UserModel.findAll(name, userType, pagina, limite);
       res.json(users);
     } catch (error) {
       console.error("Erro ao buscar usuários:", error);
