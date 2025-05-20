@@ -3,9 +3,15 @@ import RestaurantModel from "../models/restaurant.model.js";
 class RestaurantController {
   // GET /restaurantes
   async getAllRestaurants(req, res) {
+    const name = req.query.name;
+    const category = req.query.category;
+    const pagina = req.query.pagina || 1;
+    const limite = req.query.limite || 10;
+
     try {
-      const restaurantes = await RestaurantModel.findAll();
-      res.json(restaurantes);
+      const restaurants = await RestaurantModel.findAll(name, category, pagina, limite);
+      res.json(restaurants);
+
     } catch (error) {
       console.error("Erro ao buscar os restaurantes:", error);
       res.status(500).json({ error: "Erro ao buscar os restaurantes" });
