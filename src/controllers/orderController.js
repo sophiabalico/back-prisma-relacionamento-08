@@ -3,15 +3,13 @@ import OrderModel from "../models/order.model.js";
 class OrderController {
   // GET /ordens
   async getAllOrders(req, res) {
-    const notes = req.query.notes;
+    const status = req.query.status;
     const totalAmount = req.query.totalAmount;
     const pagina = req.query.pagina || 1; 
     const limite = req.query.limite || 10;
 
-    const status = req.query.status;
-
     try {
-      const orders = await OrderModel.findAll(notes, totalAmount, pagina, limite, status);
+      const orders = await OrderModel.findAll(status, totalAmount, pagina, limite);
       res.json(orders);
     } catch (error) {
       console.error("Erro ao buscar as cartas:", error);
